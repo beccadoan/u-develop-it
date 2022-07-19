@@ -1,5 +1,24 @@
 {
   "dependencies": {
     "mysql2": "^2.3.3"
-  }
+  },
+  "name": "u-develop-it",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beccadoan/u-develop-it.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beccadoan/u-develop-it/issues"
+  },
+  "homepage": "https://github.com/beccadoan/u-develop-it#readme"
 }
