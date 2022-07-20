@@ -19,8 +19,13 @@ const db = mysql.createConnection(
 )
 
 // Get all candidates
-router.get('/candidate', (req, res) => {
-    db.query(`SELECT * FROM candidates`, (err, rows) => {
+router.get('/candidates', (req, res) => {
+    const sql = `SELECT candidates.*, parties.name 
+             AS party_name 
+             FROM candidates 
+             LEFT JOIN parties 
+             ON candidates.party_id = parties.id`;
+    db.query(sql, (err, rows) => {
     if(err){
         res.status(500).json({error: error.message})
         return
@@ -35,7 +40,13 @@ router.get('/candidate', (req, res) => {
 // Get a single candidate
 router.get('/candidate/:id', (req, res) => {
     const id = req.params.id;
-    db.query(`SELECT * FROM candidates WHERE id = ?`, id, (err, row) => {
+    const sql = `SELECT candidates.*, parties.name 
+             AS party_name 
+             FROM candidates 
+             LEFT JOIN parties 
+             ON candidates.party_id = parties.id 
+             WHERE candidates.id = ?`;
+    db.query(sql, id, (err, row) => {
         if(err){
             res.status(500).json({error: error.message})
             return
