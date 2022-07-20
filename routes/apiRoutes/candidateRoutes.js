@@ -1,22 +1,6 @@
 const router = require('express').Router();
-const mysql = require('mysql2');
 const inputCheck = require('../../utils/inputCheck')
-require('dotenv').config();
-
-
-const db_user = process.env.DB_USER;
-const db_pass = process.env.DB_PASS;
-
-// Connect to database
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: db_user,
-        password: db_pass,
-        database: 'election'
-    },
-    console.log('Connected to the election database')
-)
+const db = require('../connection')
 
 // Get all candidates
 router.get('/candidates', (req, res) => {
@@ -67,21 +51,45 @@ router.post('/candidate', ({ body }, res) => {
       return;
     }
     const sql = `INSERT INTO candidates (first_name, last_name, industry_connected)
-  VALUES (?,?,?)`;
-const params = [body.first_name, body.last_name, body.industry_connected];
+                 VALUES (?,?,?)`;
+    const params = [body.first_name, body.last_name, body.industry_connected];
 
-db.query(sql, params, (err, result) => {
-  if (err) {
-    res.status(400).json({ error: err.message });
-    return;
-  }
-  res.json({
-    message: 'success',
-    data: body
-  });
+    db.query(sql, params, (err, result) => {
+    if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+    }
+    res.json({
+        message: 'success',
+        data: body
+    });
+    });
 });
-  });
 
+// Update a candidate's party
+router.put('/candidate/:id', (req, res) => {
+    const sql = `UPDATE candidates SET party_id = ? 
+                 WHERE id = ?`;
+    const params = [req.body.party_id, req.params.id];
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        // check if a record was found
+      } else if (!result.affectedRows) {
+        res.json({
+          message: 'Candidate not found'
+        });
+      } else {
+        res.json({
+          message: 'success',
+          data: req.body,
+          changes: result.affectedRows
+        });
+      }
+    });
+});
+
+// Delete a candidate
 router.delete('/candidate/:id', (req, res) => {
     const id = req.params.id;
     db.query(`DELETE FROM candidates WHERE id = ?`, id, (err, result) => {
