@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const inputCheck = require('../../utils/inputCheck')
-const db = require('../connection')
+const db = require('../../db/connection')
 
 // Get all candidates
 router.get('/candidates', (req, res) => {

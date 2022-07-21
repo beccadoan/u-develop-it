@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const db = require('../connection')
+const db = require('../../db/connection')
 
 // Get all parties
 router.get('/parties', (req, res) => {
